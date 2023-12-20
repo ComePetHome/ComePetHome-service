@@ -1,4 +1,13 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
+import { PetsAPIService } from './petsAPIUpdate.service';
 
 @Controller('pets')
-export class PetsController {}
+export class PetsController {
+  constructor(private petsAPIService: PetsAPIService) {}
+
+  @Get('/')
+  getPetData() {
+    this.petsAPIService.updatePetData();
+    this.petsAPIService.updatePetImageData();
+  }
+}
