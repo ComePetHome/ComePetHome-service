@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PetRepository } from './pet.repository';
-import { getPetsAPI } from '@/apis/petAPIS';
+import { getPetsImageAPI } from 'src/apis/petImageAPIS';
+import { getPetsAPI } from 'src/apis/petAPIS';
 import { Pet } from './pet.entity';
-import { getPetsImageAPI } from '@/apis/petImageAPIS';
+import { PetInstance } from '@/apis/response/petResponse';
 
 @Injectable()
 export class PetsAPIService {
@@ -17,7 +18,7 @@ export class PetsAPIService {
       try {
         const petData = await this.fetchPetData(offset, pageTerm);
 
-        if (petData !== undefined) {
+        if (petData !== null) {
           petData.map(async (petInfo) => {
             //Todo: animal_id 같은 데이터 있으면 일부 업데이트, 없으면 새로 삽입
             const pet = await this.findByPetId(petInfo.ANIMAL_NO);
@@ -68,7 +69,7 @@ export class PetsAPIService {
       try {
         const petData = await this.fetchPetImageData(offset, pageTerm);
 
-        if (petData !== undefined) {
+        if (petData !== null) {
           petData.map(async (petInfo) => {
             //ANIMAL_NO 찾아서 "PHOTO_KND":"THUMB" 만 저장
             if (petInfo.PHOTO_KND === 'THUMB') {
@@ -90,11 +91,6 @@ export class PetsAPIService {
       }
     }
   }
-
-  async findAll(): Promise<Pet[]> {
-    return this.petRepository.find();
-  }
-
   async findByPetId(pet_id: number): Promise<Pet | undefined> {
     return this.petRepository.findOne({ where: { pet_id: pet_id } });
   }
@@ -104,10 +100,10 @@ export class PetsAPIService {
 
     if (match && match.length >= 1) {
       const name = match[1].trim();
-      const center = match[2] ? match[2].trim() : '';
+      const center = match[2] ? match[2].trim() : null;
       return { name, center };
     }
-    return { name: '', center: '' };
+    return { name: null, center: null };
   }
 
   htmlParsing(html: string) {
@@ -116,14 +112,17 @@ export class PetsAPIService {
     return $.text();
   }
 
-  fetchPetData = async (offset: number, pageTerm: number) => {
+  fetchPetData = async (
+    offset: number,
+    pageTerm: number,
+  ): Promise<PetInstance[] | null> => {
     try {
       const petData = await getPetsAPI(offset, pageTerm);
 
       if (petData) {
         return petData.row;
       } else {
-        return undefined;
+        return null;
       }
     } catch (error) {
       console.error('펫 API 데이터를 불러오는 중 오류 발생:', error);
@@ -137,7 +136,7 @@ export class PetsAPIService {
       if (petData) {
         return petData.row;
       } else {
-        return undefined;
+        return null;
       }
     } catch (error) {
       console.error('펫 이미지 API 데이터를 불러오는 중 오류 발생:', error);
