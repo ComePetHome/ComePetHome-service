@@ -1,21 +1,21 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PetsController } from './pets.controller';
-import { PetsService } from './pets.service';
+import { PetsAPIService } from './petsAPIUpdate.service';
 
-jest.mock('./pets.service');
+jest.mock('./petsAPIUpdate.service');
 
 describe('PetsController', () => {
   let controller: PetsController;
-  let petsService: PetsService;
+  let service: PetsAPIService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [PetsController],
-      providers: [PetsService],
+      providers: [PetsAPIService],
     }).compile();
 
     controller = module.get<PetsController>(PetsController);
-    service = module.get<PetsService>(PetsService);
+    service = module.get<PetsAPIService>(PetsAPIService);
   });
 
   it('should be defined', () => {

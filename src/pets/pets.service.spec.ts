@@ -1,19 +1,19 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PetsService } from './pets.service';
 import { PetRepository } from './pet.repository';
+import { PetsAPIService } from './petsAPIUpdate.service';
 
 jest.mock('./pet.repository');
 
 describe('PetsService', () => {
-  let service: PetsService;
+  let service: PetsAPIService;
   let petRepository: PetRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [PetsService, PetRepository],
+      providers: [PetsAPIService, PetRepository],
     }).compile();
 
-    service = module.get<PetsService>(PetsService);
+    service = module.get<PetsAPIService>(PetsAPIService);
     petRepository = module.get<PetRepository>(PetRepository);
   });
 
