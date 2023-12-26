@@ -1,7 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PetRepository } from './pet.repository';
 import { Pet } from './pet.entity';
 import { PetListItemResponse } from './dto/response/petListItem.response';
+import { plainToClass } from 'class-transformer';
+import { PetInfoResponse } from './dto/response/petInfo.response';
 
 @Injectable()
 export class PetsService {
@@ -20,17 +22,27 @@ export class PetsService {
         .skip(skip)
         .take(pageSize)
         .getMany()
-    ).map((pet) => ({
-      id: pet.id,
-      name: pet.name,
-      center: pet.center,
-      enlistment_date: pet.enlistment_date,
-      breeds: pet.breeds,
-      sex: pet.sex,
-      age: pet.age,
-      adp_status: pet.adp_status,
-    }));
+    ).map((pet) =>
+      plainToClass(PetListItemResponse, pet, {
+        excludeExtraneousValues: true,
+      }),
+    );
     return pets;
+  }
+
+  async getPetInfo(pet_id: number): Promise<PetInfoResponse> {
+    const pet: Pet = await this.petRepository.findOne({
+      where: { pet_id: pet_id },
+    });
+
+    if (!pet) {
+      //Todo: 커스텀 에러 처리 제작
+      throw new NotFoundException();
+    }
+
+    return plainToClass(PetInfoResponse, pet, {
+      excludeExtraneousValues: true,
+    });
   }
 
   async findAll(): Promise<Pet[]> {

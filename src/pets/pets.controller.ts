@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { PetsAPIService } from './petsAPIUpdate.service';
 import {
   ApiOperation,
@@ -9,6 +9,7 @@ import {
 } from '@nestjs/swagger';
 import { PetListItemResponse } from './dto/response/petListItem.response';
 import { PetsService } from './pets.service';
+import { PetInfoResponse } from './dto/response/petInfo.response';
 
 @Controller('pets')
 @ApiTags('Pet')
@@ -41,5 +42,10 @@ export class PetsController {
     // this.petsAPIService.updatePetImageData();
 
     return this.petsService.getAllPetList((pageNumber = pageNumber));
+  }
+
+  @Get('/:petId')
+  getPetInfo(@Param('petId') petId: number): Promise<PetInfoResponse> {
+    return this.petsService.getPetInfo(petId);
   }
 }
