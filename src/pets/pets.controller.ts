@@ -52,6 +52,12 @@ export class PetsController {
     type: Number,
     description: '동물 번호(pet_id)',
   })
+  @ApiResponse({
+    status: 200,
+    description: 'success',
+    type: PetInfoResponse,
+    isArray: false,
+  })
   getPetInfo(@Param('petId') petId: number): Promise<PetInfoResponse> {
     return this.petsService.getPetInfo(petId);
   }
