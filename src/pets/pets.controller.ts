@@ -2,6 +2,7 @@ import { Controller, Get, Param, Query } from '@nestjs/common';
 import { PetsAPIService } from './petsAPIUpdate.service';
 import {
   ApiOperation,
+  ApiParam,
   ApiProperty,
   ApiQuery,
   ApiResponse,
@@ -45,6 +46,12 @@ export class PetsController {
   }
 
   @Get('/:petId')
+  @ApiOperation({ summary: '유기동물 조회 페이지 세부정보 조회' })
+  @ApiParam({
+    name: 'petId',
+    type: Number,
+    description: '동물 번호(pet_id)',
+  })
   getPetInfo(@Param('petId') petId: number): Promise<PetInfoResponse> {
     return this.petsService.getPetInfo(petId);
   }
