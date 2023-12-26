@@ -1,26 +1,48 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PetRepository } from './pet.repository';
 import { Pet } from './pet.entity';
 import { PetListItemResponse } from './dto/response/petListItem.response';
+import { plainToClass } from 'class-transformer';
+import { PetInfoResponse } from './dto/response/petInfo.response';
 
 @Injectable()
 export class PetsService {
   constructor(private petRepository: PetRepository) {}
 
-  async getAllPetList(): Promise<PetListItemResponse[]> {
-    const pets: PetListItemResponse[] = (await this.petRepository.find()).map(
-      (pet) => ({
-        id: pet.id,
-        name: pet.name,
-        center: pet.center,
-        enlistment_date: pet.enlistment_date,
-        breeds: pet.breeds,
-        sex: pet.sex,
-        age: pet.age,
-        adp_status: pet.adp_status,
+  async getAllPetList(
+    pageNumber: number = 0,
+    pageSize: number = 10,
+  ): Promise<PetListItemResponse[]> {
+    const skip = pageNumber * pageSize;
+
+    const pets: PetListItemResponse[] = (
+      await this.petRepository
+        .createQueryBuilder('pet')
+        .orderBy('pet.enlistment_date', 'DESC') // enlistment_date 기준으로 내림차순으로 정렬 (필요에 따라 변경 가능)
+        .skip(skip)
+        .take(pageSize)
+        .getMany()
+    ).map((pet) =>
+      plainToClass(PetListItemResponse, pet, {
+        excludeExtraneousValues: true,
       }),
     );
     return pets;
+  }
+
+  async getPetInfo(pet_id: number): Promise<PetInfoResponse> {
+    const pet: Pet = await this.petRepository.findOne({
+      where: { pet_id: pet_id },
+    });
+
+    if (!pet) {
+      //Todo: 커스텀 에러 처리 제작
+      throw new NotFoundException();
+    }
+
+    return plainToClass(PetInfoResponse, pet, {
+      excludeExtraneousValues: true,
+    });
   }
 
   async findAll(): Promise<Pet[]> {
