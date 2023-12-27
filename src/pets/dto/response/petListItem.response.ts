@@ -3,10 +3,10 @@ import { Expose } from 'class-transformer';
 
 export class PetListItemResponse {
   @ApiProperty({
-    description: '아이디',
+    description: '펫 아이디',
   })
   @Expose()
-  id: number;
+  pet_id: number;
 
   @ApiProperty({
     description: '유기동물 이름',
