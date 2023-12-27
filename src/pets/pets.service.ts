@@ -1,9 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PetRepository } from './pet.repository';
 import { Pet } from './pet.entity';
 import { PetListItemResponse } from './dto/response/petListItem.response';
 import { plainToClass } from 'class-transformer';
 import { PetInfoResponse } from './dto/response/petInfo.response';
+import { InvalidPetIdException } from './exception/InvalidPetId.exception';
 
 @Injectable()
 export class PetsService {
@@ -36,8 +37,7 @@ export class PetsService {
     });
 
     if (!pet) {
-      //Todo: 커스텀 에러 처리 제작
-      throw new NotFoundException();
+      throw new InvalidPetIdException();
     }
 
     return plainToClass(PetInfoResponse, pet, {
