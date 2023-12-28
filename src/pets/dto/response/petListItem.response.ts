@@ -54,4 +54,7 @@ export class PetListItemResponse {
   })
   @Expose()
   adp_status: string;
+
+  @Expose()
+  like: boolean;
 }

@@ -1,5 +1,6 @@
 import { BasicEntity } from '@/common/audit/Basic.entity';
-import { Column, Entity } from 'typeorm';
+import { PetLike } from '@/pet-like/pet-like.entity';
+import { Column, Entity, OneToMany } from 'typeorm';
 
 @Entity()
 export class Pet extends BasicEntity {
@@ -47,4 +48,7 @@ export class Pet extends BasicEntity {
 
   @Column({ nullable: true })
   thumbnail_url: string;
+
+  @OneToMany(() => PetLike, (like) => like.pet)
+  likes: PetLike[];
 }
