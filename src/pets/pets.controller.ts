@@ -3,7 +3,6 @@ import { PetsAPIService } from './petsAPIUpdate.service';
 import {
   ApiOperation,
   ApiParam,
-  ApiProperty,
   ApiQuery,
   ApiResponse,
   ApiTags,
