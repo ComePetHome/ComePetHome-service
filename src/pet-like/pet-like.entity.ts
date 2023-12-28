@@ -1,8 +1,12 @@
 import { BasicEntity } from '@/common/audit/Basic.entity';
-import { Entity } from 'typeorm';
+import { Pet } from '@/pets/pet.entity';
+import { Column, Entity, ManyToOne } from 'typeorm';
 
 @Entity()
 export class PetLike extends BasicEntity {
-  id: number;
-  created_at: Date;
+  @Column({ nullable: false })
+  user_id: number;
+
+  @ManyToOne(() => Pet, (pet) => pet.likes)
+  pet: Pet;
 }
