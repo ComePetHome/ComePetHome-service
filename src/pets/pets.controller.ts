@@ -38,8 +38,8 @@ export class PetsController {
     pageNumber: number = 0,
   ): Promise<PetListItemResponse[]> {
     //Todo : 데이터 업데이트 스케줄러로 빼기
-    // this.petsAPIService.updatePetData();
-    // this.petsAPIService.updatePetImageData();
+    this.petsAPIService.updatePetData();
+    this.petsAPIService.updatePetImageData();
 
     return this.petsService.getAllPetList((pageNumber = pageNumber));
   }

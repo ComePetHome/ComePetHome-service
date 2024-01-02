@@ -23,7 +23,7 @@ export class PetsAPIService {
             //Todo: animal_id 같은 데이터 있으면 일부 업데이트, 없으면 새로 삽입
             const pet = await this.findByPetId(petInfo.ANIMAL_NO);
             const { name, center } = this.parseString(petInfo.NM);
-            if (pet !== undefined) {
+            if (pet !== null) {
               //Todo : 가져와서 데이터베이스 업데이트 진행
             } else {
               const pet = this.petRepository.create({
@@ -74,7 +74,7 @@ export class PetsAPIService {
             //ANIMAL_NO 찾아서 "PHOTO_KND":"THUMB" 만 저장
             if (petInfo.PHOTO_KND === 'THUMB') {
               const pet = await this.findByPetId(petInfo.ANIMAL_NO);
-              if (pet !== undefined && pet.thumbnail_url === null) {
+              if (pet !== null && pet.thumbnail_url === null) {
                 pet.thumbnail_url = petInfo.PHOTO_URL;
                 await this.petRepository.save(pet);
               }
