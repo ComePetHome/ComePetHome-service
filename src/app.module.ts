@@ -7,9 +7,9 @@ import { PetLikeModule } from './pet-like/pet-like.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     PetsModule,
     TypeOrmModule.forRoot(typeORMConfig),
-    ConfigModule.forRoot(),
     PetLikeModule,
   ],
   controllers: [],

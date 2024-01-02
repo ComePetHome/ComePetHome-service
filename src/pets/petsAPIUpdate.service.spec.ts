@@ -3,6 +3,7 @@ import { PetRepository } from './pet.repository';
 import { PetsAPIService } from './petsAPIUpdate.service';
 
 jest.mock('./pet.repository');
+jest.mock('./petsAPIUpdate.service');
 
 describe('PetsService', () => {
   let service: PetsAPIService;
