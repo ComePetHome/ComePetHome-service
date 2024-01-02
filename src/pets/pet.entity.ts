@@ -1,17 +1,9 @@
-import {
-  BaseEntity,
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { BasicEntity } from '@/common/audit/Basic.entity';
+import { PetLike } from '@/pet-like/pet-like.entity';
+import { Column, Entity, OneToMany } from 'typeorm';
 
 @Entity()
-export class Pet extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class Pet extends BasicEntity {
   @Column({ nullable: false })
   pet_id: number;
 
@@ -57,16 +49,6 @@ export class Pet extends BaseEntity {
   @Column({ nullable: true })
   thumbnail_url: string;
 
-  @CreateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
-  })
-  created_at: Date;
-
-  @UpdateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
-    onUpdate: 'CURRENT_TIMESTAMP(6)',
-  })
-  updated_at: Date;
+  @OneToMany(() => PetLike, (like) => like.pet)
+  likes: PetLike[];
 }
