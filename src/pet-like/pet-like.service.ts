@@ -11,7 +11,7 @@ export class PetLikeService {
     private readonly petValidService: PetValidService,
   ) {}
 
-  async addLike(user_id: number, pet_id: number): Promise<PetLike> {
+  async addLike(user_id: string, pet_id: number): Promise<PetLike> {
     const pet: Pet = await this.petValidService.getPetByPetId(pet_id);
 
     const petLike = this.petLikeRepository.create({
@@ -22,7 +22,7 @@ export class PetLikeService {
     return await this.petLikeRepository.save(petLike);
   }
 
-  async removeLike(user_id: number, pet_id: number): Promise<void> {
+  async removeLike(user_id: string, pet_id: number): Promise<void> {
     const petLike = await this.petLikeRepository.findOne({
       where: { user_id, pet: { id: pet_id } },
     });
