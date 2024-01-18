@@ -14,12 +14,11 @@ export class PetsService {
   ) {}
 
   async getAllPetList(
+    user_id: string,
     pageNumber: number = 0,
     pageSize: number = 10,
   ): Promise<PetListItemResponse[]> {
     const skip = pageNumber * pageSize;
-    const user_id = 123;
-
     const pets: PetListItemResponse[] = (
       await this.petRepository
         .createQueryBuilder('pet')

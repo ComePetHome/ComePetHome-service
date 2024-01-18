@@ -5,4 +5,7 @@ export enum ErrorCode {
 
   //Pet error
   INVALID_PET_ID = 1000 + 1,
+
+  //Community error
+  NOT_ARTICLE_AUTHOR = 2000 + 1,
 }

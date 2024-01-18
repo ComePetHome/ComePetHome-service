@@ -1,4 +1,4 @@
-import { ArticleCategory } from '@/article/articleCategory.enum';
+import { ArticleCategory } from '@/article/enum/articleCategory.enum';
 import { MaxLength } from 'class-validator';
 
 export class CreateArticleDto {

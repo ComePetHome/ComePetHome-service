@@ -2,10 +2,18 @@ import { Injectable } from '@nestjs/common';
 import { ArticleRepository } from './article.repository';
 import { CreateArticleDto } from './dto/request/createArticleDTO';
 import { Article } from './article.entity';
+import { NotArticleAuthorException } from './exception/NotArticleAuthorException';
+import { ArticleCategory } from './enum/articleCategory.enum';
 
 @Injectable()
 export class ArticleService {
   constructor(private articleRepository: ArticleRepository) {}
+
+  async getArticles(
+    sort: ArticleSort,
+    category: ArticleCategor,
+    pageNum: number,
+  ) {}
 
   async createArticle(
     userId: string,
@@ -18,7 +26,15 @@ export class ArticleService {
       contents: contents,
       category: category,
     });
-
     return await this.articleRepository.save(article);
+  }
+
+  async deleteArticle(userId: string, articleId: number): Promise<void> {
+    const article = await this.articleRepository.findOneById(articleId);
+    if (article.user_id === userId) {
+      await this.articleRepository.remove(article);
+    } else {
+      throw NotArticleAuthorException;
+    }
   }
 }

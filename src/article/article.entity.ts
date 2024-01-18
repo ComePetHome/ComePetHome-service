@@ -1,6 +1,6 @@
 import { BasicEntity } from '@/common/audit/Basic.entity';
 import { Column, Entity } from 'typeorm';
-import { ArticleCategory } from './articleCategory.enum';
+import { ArticleCategory } from './enum/articleCategory.enum';
 
 @Entity()
 export class Article extends BasicEntity {
