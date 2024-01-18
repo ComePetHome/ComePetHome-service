@@ -3,17 +3,18 @@ import { ArticleRepository } from './article.repository';
 import { CreateArticleDto } from './dto/request/createArticleDTO';
 import { Article } from './article.entity';
 import { NotArticleAuthorException } from './exception/NotArticleAuthorException';
-import { ArticleCategory } from './enum/articleCategory.enum';
 
 @Injectable()
 export class ArticleService {
   constructor(private articleRepository: ArticleRepository) {}
 
-  async getArticles(
-    sort: ArticleSort,
-    category: ArticleCategor,
-    pageNum: number,
-  ) {}
+  // async getArticles(
+  //   sort: ArticleSort,
+  //   category: ArticleCategor,
+  //   pageNum: number,
+  // ){
+
+  // }
 
   async createArticle(
     userId: string,
