@@ -1,31 +1,21 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Param, Post } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { ArticleService } from './article.service';
 import { CreateArticleDto } from './dto/request/createArticleDTO';
-import { ArticleCategory } from './enum/articleCategory.enum';
-import { ArticleSort } from './enum/articleSort';
 
 @Controller('community')
 @ApiTags('Community')
 export class ArticleController {
   constructor(private articleSerivce: ArticleService) {}
 
-  @Get()
-  async getArticle(
-    @Query('sort') sort: ArticleSort,
-    @Query('category') category: ArticleCategory,
-    @Query('pageNumber') pageNum: number = 0,
-  ) {
-    return this.articleService.getArticles(sort, category, pageNum);
-  }
+  // @Get()
+  // async getArticle(
+  //   @Query('sort') sort: ArticleSort,
+  //   @Query('category') category: ArticleCategory,
+  //   @Query('pageNumber') pageNum: number = 0,
+  // ) {
+  //   return this.articleService.getArticles(sort, category, pageNum);
+  // }
 
   @Post('/:userId')
   @ApiOperation({ summary: '게시글 작성' })
