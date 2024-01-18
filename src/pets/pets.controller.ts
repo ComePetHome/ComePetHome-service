@@ -36,12 +36,14 @@ export class PetsController {
   getPetData(
     @Query('pageNumber')
     pageNumber: number = 0,
+    @Query('userId')
+    userId: string = null,
   ): Promise<PetListItemResponse[]> {
     //Todo : 데이터 업데이트 스케줄러로 빼기
     this.petsAPIService.updatePetData();
     this.petsAPIService.updatePetImageData();
 
-    return this.petsService.getAllPetList((pageNumber = pageNumber));
+    return this.petsService.getAllPetList(userId, pageNumber);
   }
 
   @Get('/:petId')

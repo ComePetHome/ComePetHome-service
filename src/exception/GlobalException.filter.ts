@@ -32,7 +32,10 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
     response.status(status).json({
       code,
-      message: (exception as any).message,
+      message:
+        exception instanceof HttpException
+          ? exception.getResponse()
+          : (exception as any).message,
       timestamp: new Date().toISOString(),
     });
   }

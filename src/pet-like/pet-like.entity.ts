@@ -5,7 +5,7 @@ import { Column, Entity, ManyToOne } from 'typeorm';
 @Entity()
 export class PetLike extends BasicEntity {
   @Column({ nullable: false })
-  user_id: number;
+  user_id: string;
 
   @ManyToOne(() => Pet, (pet) => pet.likes)
   pet: Pet;
