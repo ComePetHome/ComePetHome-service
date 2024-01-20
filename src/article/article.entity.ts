@@ -19,4 +19,7 @@ export class Article extends BasicEntity {
 
   @Column({ nullable: false })
   user_id: string;
+
+  @Column({ type: 'text', array: true, nullable: true })
+  images: string[];
 }
