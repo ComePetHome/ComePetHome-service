@@ -5,5 +5,6 @@ import { ImageuploadController } from './imageupload.controller';
 @Module({
   providers: [ImageuploadService],
   controllers: [ImageuploadController],
+  exports: [ImageuploadService],
 })
 export class ImageuploadModule {}
