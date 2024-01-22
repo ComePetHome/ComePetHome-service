@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ArticleRepository } from './article.repository';
 import { Article } from './article.entity';
-import { ArticleNotFoundException } from './exception/ArticleNotFoundException';
+import { ArticleNotFoundException } from './exception/ArticleNotFound.exception';
 
 @Injectable()
 export class ArticleValidService {

@@ -5,11 +5,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Article } from './article.entity';
 import { ArticleRepository } from './article.repository';
 import { ImageuploadModule } from '@/imageupload/imageupload.module';
+import { ArticleValidService } from './articleValid.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Article]), ImageuploadModule],
   controllers: [ArticleController],
-  providers: [ArticleService, ArticleRepository],
-  exports: [ArticleRepository],
+  providers: [ArticleService, ArticleRepository, ArticleValidService],
+  exports: [ArticleRepository, ArticleValidService],
 })
 export class ArticleModule {}

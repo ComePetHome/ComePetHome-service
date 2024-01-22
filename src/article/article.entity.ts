@@ -24,6 +24,9 @@ export class Article extends BasicEntity {
   @Column({ type: 'text', array: true, nullable: true })
   images: string[];
 
-  @OneToMany(() => Comment, (comment) => comment.article)
+  @OneToMany(() => Comment, (comment) => comment.article, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   comments: Comment[];
 }

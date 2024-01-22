@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ArticleRepository } from './article.repository';
 import { CreateArticleRequest } from './dto/request/createArticle.request';
 import { Article } from './article.entity';
-import { NotArticleAuthorException } from './exception/NotArticleAuthorException';
+import { NotArticleAuthorException } from './exception/NotArticleAuthor.exception';
 import { ImageuploadService } from '@/imageupload/imageupload.service';
 import { ArticleCategory } from './enum/articleCategory.enum';
 import { ArticleSort } from './enum/articleSort.enum';
