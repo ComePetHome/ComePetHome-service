@@ -8,12 +8,16 @@ import { ArticleCategory } from './enum/articleCategory.enum';
 import { ArticleSort } from './enum/articleSort.enum';
 import { ArticleResponse } from './dto/response/article.response';
 import { plainToClass } from 'class-transformer';
+import { ArticleDetailResponse } from './dto/response/articleDetail.response';
+import { ArticleValidService } from './articleValid.service';
+import { ArticleNotFoundException } from './exception/ArticleNotFound.exception';
 
 @Injectable()
 export class ArticleService {
   constructor(
     private articleRepository: ArticleRepository,
     private imageUploadService: ImageuploadService,
+    private articleValidService: ArticleValidService,
   ) {}
 
   async getArticles(
@@ -39,7 +43,26 @@ export class ArticleService {
         { excludeExtraneousValues: true },
       ),
     );
+
     return articles;
+  }
+
+  async getArticleDetail(articleId: number): Promise<ArticleDetailResponse> {
+    const article: Article = await this.articleRepository
+      .createQueryBuilder('article')
+      .where('article.id = :articleId', { articleId })
+      .leftJoinAndSelect('article.comments', 'comment')
+      .orderBy('comment.created_at', 'DESC')
+      .getOne();
+
+    if (!article) {
+      throw new ArticleNotFoundException();
+    }
+
+    return plainToClass(ArticleDetailResponse, article, {
+      excludeExtraneousValues: true,
+      enableImplicitConversion: true,
+    });
   }
 
   async createArticle(

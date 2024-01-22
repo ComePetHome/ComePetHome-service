@@ -24,6 +24,7 @@ import { ArticleCategory } from './enum/articleCategory.enum';
 import { ArticleSort } from './enum/articleSort.enum';
 import { ArticleResponse } from './dto/response/article.response';
 import { CreateArticleRequest } from './dto/request/createArticle.request';
+import { ArticleDetailResponse } from './dto/response/articleDetail.response';
 
 @Controller('community')
 @ApiTags('커뮤니티')
@@ -50,13 +51,27 @@ export class ArticleController {
     enum: Object.values(ArticleSort),
     description: '정렬',
   })
+  @ApiOperation({ summary: '커뮤니티 리스트 조회' })
   @Get()
-  async getArticle(
+  async getArticles(
     @Query('sort') sort: ArticleSort,
     @Query('category') category: ArticleCategory,
     @Query('pageNumber') pageNum: number = 0,
   ): Promise<ArticleResponse[]> {
     return this.articleService.getArticles(sort, category, pageNum);
+  }
+
+  @Get('/:articleId')
+  @ApiOperation({ summary: '게시글 자세한 정보 조회 (리스트에서 클릭했을 때)' })
+  @ApiParam({
+    name: 'articleId',
+    type: Number,
+    description: '게시물 id',
+  })
+  async getArticle(
+    @Param('articleId') articleId: number,
+  ): Promise<ArticleDetailResponse> {
+    return this.articleService.getArticleDetail(articleId);
   }
 
   @Post('/:userId')
