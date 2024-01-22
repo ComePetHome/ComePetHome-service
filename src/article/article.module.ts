@@ -10,5 +10,6 @@ import { ImageuploadModule } from '@/imageupload/imageupload.module';
   imports: [TypeOrmModule.forFeature([Article]), ImageuploadModule],
   controllers: [ArticleController],
   providers: [ArticleService, ArticleRepository],
+  exports: [ArticleRepository],
 })
 export class ArticleModule {}

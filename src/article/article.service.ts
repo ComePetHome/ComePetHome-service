@@ -23,18 +23,23 @@ export class ArticleService {
     pageSize: number = 10,
   ): Promise<ArticleResponse[]> {
     const skip = pageNum * pageSize;
-    const articles: ArticleResponse[] = await this.articleRepository
-      .createQueryBuilder('article')
-      .where('article.category = :category', { category })
-      .orderBy('article.created_at', 'DESC')
-      .skip(skip)
-      .take(pageSize)
-      .getMany();
-    console.log(articles);
-
-    return articles.map((article) =>
-      plainToClass(ArticleResponse, article, { excludeExtraneousValues: true }),
+    const articles: ArticleResponse[] = (
+      await this.articleRepository
+        .createQueryBuilder('article')
+        .where('article.category = :category', { category })
+        .leftJoinAndSelect('article.comments', 'comment')
+        .orderBy('article.created_at', 'DESC')
+        .skip(skip)
+        .take(pageSize)
+        .getMany()
+    ).map((article) =>
+      plainToClass(
+        ArticleResponse,
+        { ...article, comment_num: article.comments.length },
+        { excludeExtraneousValues: true },
+      ),
     );
+    return articles;
   }
 
   async createArticle(

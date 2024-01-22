@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { PetLikeModule } from './pet-like/pet-like.module';
 import { ArticleModule } from './article/article.module';
 import { ImageuploadModule } from './imageupload/imageupload.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { ImageuploadModule } from './imageupload/imageupload.module';
     PetLikeModule,
     ArticleModule,
     ImageuploadModule,
+    CommentModule,
   ],
 })
 export class AppModule {}

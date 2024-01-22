@@ -5,6 +5,12 @@ import { Expose } from 'class-transformer';
 export class ArticleResponse {
   @Expose()
   @ApiProperty({
+    description: '게시물 번호',
+  })
+  id: number;
+
+  @Expose()
+  @ApiProperty({
     description: '게시물 제목',
   })
   title: string;
