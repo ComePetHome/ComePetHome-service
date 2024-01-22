@@ -8,4 +8,7 @@ export enum ErrorCode {
 
   //Community error
   NOT_ARTICLE_AUTHOR = 2000 + 1,
+  ARTICLE_NOT_FOUND = 2000 + 2,
+  COMMENT_NOT_FOUND = 2000 + 3,
+  NOT_COMMENT_AUTHOR = 2000 + 4,
 }

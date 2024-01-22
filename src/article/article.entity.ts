@@ -1,6 +1,7 @@
 import { BasicEntity } from '@/common/audit/Basic.entity';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { ArticleCategory } from './enum/articleCategory.enum';
+import { Comment } from '@/comment/comment.entity';
 
 @Entity()
 export class Article extends BasicEntity {
@@ -22,4 +23,10 @@ export class Article extends BasicEntity {
 
   @Column({ type: 'text', array: true, nullable: true })
   images: string[];
+
+  @OneToMany(() => Comment, (comment) => comment.article, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  comments: Comment[];
 }
