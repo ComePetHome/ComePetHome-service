@@ -5,6 +5,7 @@ import { ArticleLike } from './article-like.entity';
 import { LikeAlreadyExistsException } from './exception/LikeAlreadyExists.exception';
 import { Article } from '@/article/article.entity';
 import { ArticleRepository } from '@/article/article.repository';
+import { LikeAlreadyDeleteException } from './exception/LikeAlreadyDelete.exception';
 
 @Injectable()
 export class ArticleLikeService {
@@ -44,8 +45,7 @@ export class ArticleLikeService {
       where: { user_id, article: { id: article_id } },
     });
     if (!articleLike) {
-      //Todo: 없다면 무시 처리 (다른 처리 가능)
-      return;
+      throw new LikeAlreadyDeleteException();
     } else {
       article.like_num--;
       await this.articleRepository.save(article);
