@@ -1,9 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { ArticleRepository } from './article.repository';
-import { CreateArticleDto } from './dto/request/createArticleDTO';
+import { CreateArticleRequest } from './dto/request/createArticle.request';
 import { Article } from './article.entity';
 import { NotArticleAuthorException } from './exception/NotArticleAuthorException';
 import { ImageuploadService } from '@/imageupload/imageupload.service';
+import { ArticleCategory } from './enum/articleCategory.enum';
+import { ArticleSort } from './enum/articleSort.enum';
+import { ArticleResponse } from './dto/response/article.response';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class ArticleService {
@@ -12,17 +16,35 @@ export class ArticleService {
     private imageUploadService: ImageuploadService,
   ) {}
 
-  // async getArticles(
-  //   sort: ArticleSort,
-  //   category: ArticleCategor,
-  //   pageNum: number,
-  // ){
-
-  // }
+  async getArticles(
+    sort: ArticleSort,
+    category: ArticleCategory,
+    pageNum: number,
+    pageSize: number = 10,
+  ): Promise<ArticleResponse[]> {
+    const skip = pageNum * pageSize;
+    const articles: ArticleResponse[] = (
+      await this.articleRepository
+        .createQueryBuilder('article')
+        .where('article.category = :category', { category })
+        .leftJoinAndSelect('article.comments', 'comment')
+        .orderBy('article.created_at', 'DESC')
+        .skip(skip)
+        .take(pageSize)
+        .getMany()
+    ).map((article) =>
+      plainToClass(
+        ArticleResponse,
+        { ...article, comment_num: article.comments.length },
+        { excludeExtraneousValues: true },
+      ),
+    );
+    return articles;
+  }
 
   async createArticle(
     userId: string,
-    articleDto: CreateArticleDto,
+    articleDto: CreateArticleRequest,
     files: Array<Express.Multer.File>,
   ): Promise<Article> {
     const { title, contents, category } = articleDto;
