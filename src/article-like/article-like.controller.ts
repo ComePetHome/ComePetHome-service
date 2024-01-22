@@ -1,4 +1,4 @@
-import { Controller, Param, Post } from '@nestjs/common';
+import { Controller, Delete, Param, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ArticleLikeService } from './article-like.service';
 
@@ -14,5 +14,14 @@ export class ArticleLikeController {
     @Param('articleId') articleId: number,
   ) {
     return this.articleLikeService.addLike(userId, articleId);
+  }
+
+  @Delete('/:userId/:articleId')
+  @ApiOperation({ summary: '게시물 좋아요 삭제' })
+  async deleteLike(
+    @Param('userId') userId: string,
+    @Param('articleId') articleId: number,
+  ) {
+    return this.articleLikeService.removeLike(userId, articleId);
   }
 }

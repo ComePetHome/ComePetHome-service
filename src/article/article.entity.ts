@@ -36,4 +36,7 @@ export class Article extends BasicEntity {
     onDelete: 'CASCADE',
   })
   likes: ArticleLike[];
+
+  @Column({ nullable: false, default: 0 })
+  like_num: number;
 }

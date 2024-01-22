@@ -41,7 +41,6 @@ export class ArticleService {
         {
           ...article,
           comment_num: article.comments.length,
-          like_num: article.likes.length,
         },
         { excludeExtraneousValues: true },
       ),
