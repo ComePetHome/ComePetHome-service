@@ -30,11 +30,15 @@ export class ArticleResponse {
   @ApiProperty({ description: '생성일' })
   created_at: Date;
 
-  // @Expose()
-  // @ApiProperty({ description: '좋아요 수' })
-  // like_num: number;
+  @Expose()
+  @ApiProperty({ description: '좋아요 수' })
+  like_num: number;
 
   @ApiProperty({ description: '댓글 수' })
   @Expose()
   comment_num: number;
+
+  @ApiProperty({ description: '내 좋아요 여부' })
+  @Expose()
+  like: boolean;
 }

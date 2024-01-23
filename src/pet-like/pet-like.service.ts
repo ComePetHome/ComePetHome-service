@@ -3,6 +3,7 @@ import { PetLikeRepository } from './pet-like.repository';
 import { PetLike } from './pet-like.entity';
 import { Pet } from '@/pets/pet.entity';
 import { PetValidService } from '@/pets/pet-valid/pet-valid.service';
+import { LikeAlreadyExistsException } from '@/article-like/exception/LikeAlreadyExists.exception';
 
 @Injectable()
 export class PetLikeService {
@@ -14,12 +15,19 @@ export class PetLikeService {
   async addLike(user_id: string, pet_id: number): Promise<PetLike> {
     const pet: Pet = await this.petValidService.getPetByPetId(pet_id);
 
-    const petLike = this.petLikeRepository.create({
-      user_id: user_id,
-      pet: pet,
+    const like = await this.petLikeRepository.findOne({
+      where: { user_id, pet: { id: pet_id } },
     });
 
-    return await this.petLikeRepository.save(petLike);
+    if (like) {
+      throw new LikeAlreadyExistsException();
+    } else {
+      const petLike = this.petLikeRepository.create({
+        user_id: user_id,
+        pet: pet,
+      });
+      return await this.petLikeRepository.save(petLike);
+    }
   }
 
   async removeLike(user_id: string, pet_id: number): Promise<void> {

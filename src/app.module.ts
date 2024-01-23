@@ -7,6 +7,7 @@ import { PetLikeModule } from './pet-like/pet-like.module';
 import { ArticleModule } from './article/article.module';
 import { ImageuploadModule } from './imageupload/imageupload.module';
 import { CommentModule } from './comment/comment.module';
+import { ArticleLikeModule } from './article-like/article-like.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { CommentModule } from './comment/comment.module';
     ArticleModule,
     ImageuploadModule,
     CommentModule,
+    ArticleLikeModule,
   ],
 })
 export class AppModule {}

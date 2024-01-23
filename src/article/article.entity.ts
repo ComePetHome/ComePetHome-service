@@ -2,6 +2,7 @@ import { BasicEntity } from '@/common/audit/Basic.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { ArticleCategory } from './enum/articleCategory.enum';
 import { Comment } from '@/comment/comment.entity';
+import { ArticleLike } from '@/article-like/article-like.entity';
 
 @Entity()
 export class Article extends BasicEntity {
@@ -29,4 +30,13 @@ export class Article extends BasicEntity {
     onDelete: 'CASCADE',
   })
   comments: Comment[];
+
+  @OneToMany(() => ArticleLike, (like) => like.article, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  likes: ArticleLike[];
+
+  @Column({ nullable: false, default: 0 })
+  like_num: number;
 }

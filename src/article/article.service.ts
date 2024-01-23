@@ -9,44 +9,62 @@ import { ArticleSort } from './enum/articleSort.enum';
 import { ArticleResponse } from './dto/response/article.response';
 import { plainToClass } from 'class-transformer';
 import { ArticleDetailResponse } from './dto/response/articleDetail.response';
-import { ArticleValidService } from './articleValid.service';
 import { ArticleNotFoundException } from './exception/ArticleNotFound.exception';
+import { InvalidSortValueException } from './exception/InvalidSortValue.exception';
 
 @Injectable()
 export class ArticleService {
   constructor(
     private articleRepository: ArticleRepository,
     private imageUploadService: ImageuploadService,
-    private articleValidService: ArticleValidService,
   ) {}
 
   async getArticles(
     sort: ArticleSort,
     category: ArticleCategory,
     pageNum: number,
+    user_id: string,
     pageSize: number = 10,
   ): Promise<ArticleResponse[]> {
     const skip = pageNum * pageSize;
-    const articles: ArticleResponse[] = (
-      await this.articleRepository
-        .createQueryBuilder('article')
-        .where('article.category = :category', { category })
-        .leftJoinAndSelect('article.comments', 'comment')
+    let articles: Article[];
+
+    const queryBuilder = this.articleRepository
+      .createQueryBuilder('article')
+      .where('article.category = :category', { category })
+      .leftJoinAndSelect('article.comments', 'comment')
+      .leftJoinAndSelect('article.likes', 'like', 'like.user_id = :user_id', {
+        user_id: user_id,
+      })
+      .skip(skip)
+      .take(pageSize);
+
+    if (sort === ArticleSort.LATEST) {
+      articles = await queryBuilder
         .orderBy('article.created_at', 'DESC')
-        .skip(skip)
-        .take(pageSize)
-        .getMany()
-    ).map((article) =>
+        .getMany();
+    } else if (sort === ArticleSort.POPULAR) {
+      articles = await queryBuilder
+        .orderBy('article.like_num', 'DESC')
+        .getMany();
+    } else {
+      throw new InvalidSortValueException();
+    }
+
+    return articles.map((article) =>
       plainToClass(
         ArticleResponse,
-        { ...article, comment_num: article.comments.length },
+        {
+          ...article,
+          like: article.likes.length > 0,
+          comment_num: article.comments.length,
+        },
         { excludeExtraneousValues: true },
       ),
     );
-
-    return articles;
   }
 
+  //Todo : 내 좋아요인지 알 수 있게 변경( boolean으로 )
   async getArticleDetail(articleId: number): Promise<ArticleDetailResponse> {
     const article: Article = await this.articleRepository
       .createQueryBuilder('article')
@@ -59,10 +77,16 @@ export class ArticleService {
       throw new ArticleNotFoundException();
     }
 
-    return plainToClass(ArticleDetailResponse, article, {
-      excludeExtraneousValues: true,
-      enableImplicitConversion: true,
-    });
+    return plainToClass(
+      ArticleDetailResponse,
+      {
+        ...article,
+      },
+      {
+        excludeExtraneousValues: true,
+        enableImplicitConversion: true,
+      },
+    );
   }
 
   async createArticle(
