@@ -61,7 +61,7 @@ export class ArticleController {
     return this.articleService.getArticles(sort, category, pageNum, '1231');
   }
 
-  @Get('/:articleId')
+  @Get('/info/:articleId')
   @ApiOperation({ summary: '게시글 자세한 정보 조회 (리스트에서 클릭했을 때)' })
   @ApiParam({
     name: 'articleId',
@@ -71,7 +71,22 @@ export class ArticleController {
   async getArticle(
     @Param('articleId') articleId: number,
   ): Promise<ArticleDetailResponse> {
-    return this.articleService.getArticleDetail(articleId);
+    return this.articleService.getArticleDetail(articleId, '1231');
+  }
+
+  @ApiQuery({
+    name: 'pageNumber',
+    required: false,
+    type: Number,
+    description: '페이지 번호 (기본값: 0)',
+  })
+  @ApiOperation({ summary: '커뮤니티 리스트 검색' })
+  @Get('/search')
+  async getSearchedArticles(
+    @Query('searchKeyword') word: string = '',
+    @Query('pageNumber') pageNum: number = 0,
+  ): Promise<ArticleResponse[]> {
+    return this.articleService.getSearchedArticles(pageNum, '1231', word);
   }
 
   @Post('/:userId')
