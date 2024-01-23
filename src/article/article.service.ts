@@ -19,6 +19,7 @@ export class ArticleService {
     private imageUploadService: ImageuploadService,
   ) {}
 
+  // 게시물 리스트 반환
   async getArticles(
     sort: ArticleSort,
     category: ArticleCategory,
@@ -63,12 +64,56 @@ export class ArticleService {
       ),
     );
   }
+  // 게시물 검색
+  async getSearchedArticles(
+    pageNum: number,
+    user_id: string,
+    searchKeyword: string,
+  ): Promise<ArticleResponse[]> {
+    const pageSize = 10;
+    const skip = pageNum * pageSize;
 
-  //Todo : 내 좋아요인지 알 수 있게 변경( boolean으로 )
-  async getArticleDetail(articleId: number): Promise<ArticleDetailResponse> {
+    const articles: Article[] = await this.articleRepository
+      .createQueryBuilder('article')
+      .leftJoinAndSelect('article.comments', 'comment')
+      .leftJoinAndSelect('article.likes', 'like', 'like.user_id = :user_id', {
+        user_id: user_id,
+      })
+      .where(
+        'article.title LIKE :searchKeyword OR article.contents LIKE :searchKeyword',
+        {
+          searchKeyword: `%${searchKeyword}%`,
+        },
+      )
+      .skip(skip)
+      .take(pageSize)
+      .orderBy('article.created_at', 'DESC')
+      .getMany();
+
+    return articles.map((article) =>
+      plainToClass(
+        ArticleResponse,
+        {
+          ...article,
+          like: article.likes.length > 0,
+          comment_num: article.comments.length,
+        },
+        { excludeExtraneousValues: true },
+      ),
+    );
+  }
+
+  //세부정보 확인 (클릭 시)
+  async getArticleDetail(
+    articleId: number,
+    user_id: string,
+  ): Promise<ArticleDetailResponse> {
     const article: Article = await this.articleRepository
       .createQueryBuilder('article')
       .where('article.id = :articleId', { articleId })
+      .leftJoinAndSelect('article.likes', 'like', 'like.user_id = :user_id', {
+        user_id: user_id,
+      })
       .leftJoinAndSelect('article.comments', 'comment')
       .orderBy('comment.created_at', 'DESC')
       .getOne();
@@ -81,6 +126,7 @@ export class ArticleService {
       ArticleDetailResponse,
       {
         ...article,
+        like: article.likes.length > 0,
       },
       {
         excludeExtraneousValues: true,
@@ -89,6 +135,7 @@ export class ArticleService {
     );
   }
 
+  // 게시물 생성
   async createArticle(
     userId: string,
     articleDto: CreateArticleRequest,
@@ -107,6 +154,7 @@ export class ArticleService {
     return await this.articleRepository.save(article);
   }
 
+  // 게시물 삭제
   async deleteArticle(userId: string, articleId: number): Promise<void> {
     const article = await this.articleRepository.findOneById(articleId);
     if (article.user_id === userId) {

@@ -39,4 +39,8 @@ export class ArticleDetailResponse {
   @Expose()
   @Type(() => CommentResponse)
   comments: CommentResponse[];
+
+  @ApiProperty({ description: '내 좋아요 여부' })
+  @Expose()
+  like: boolean;
 }
