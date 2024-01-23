@@ -10,6 +10,7 @@ import { ArticleResponse } from './dto/response/article.response';
 import { plainToClass } from 'class-transformer';
 import { ArticleDetailResponse } from './dto/response/articleDetail.response';
 import { ArticleNotFoundException } from './exception/ArticleNotFound.exception';
+import { InvalidSortValueException } from './exception/InvalidSortValue.exception';
 
 @Injectable()
 export class ArticleService {
@@ -25,17 +26,29 @@ export class ArticleService {
     pageSize: number = 10,
   ): Promise<ArticleResponse[]> {
     const skip = pageNum * pageSize;
-    const articles: ArticleResponse[] = (
-      await this.articleRepository
-        .createQueryBuilder('article')
-        .where('article.category = :category', { category })
-        .leftJoinAndSelect('article.comments', 'comment')
-        .leftJoinAndSelect('article.likes', 'like')
+    let articles: Article[];
+
+    const queryBuilder = this.articleRepository
+      .createQueryBuilder('article')
+      .where('article.category = :category', { category })
+      .leftJoinAndSelect('article.comments', 'comment')
+      .leftJoinAndSelect('article.likes', 'like')
+      .skip(skip)
+      .take(pageSize);
+
+    if (sort === ArticleSort.LATEST) {
+      articles = await queryBuilder
         .orderBy('article.created_at', 'DESC')
-        .skip(skip)
-        .take(pageSize)
-        .getMany()
-    ).map((article) =>
+        .getMany();
+    } else if (sort === ArticleSort.POPULAR) {
+      articles = await queryBuilder
+        .orderBy('article.like_num', 'DESC')
+        .getMany();
+    } else {
+      throw new InvalidSortValueException();
+    }
+
+    return articles.map((article) =>
       plainToClass(
         ArticleResponse,
         {
@@ -45,8 +58,6 @@ export class ArticleService {
         { excludeExtraneousValues: true },
       ),
     );
-
-    return articles;
   }
 
   //Todo : 내 좋아요인지 알 수 있게 변경( boolean으로 )
