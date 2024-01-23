@@ -37,4 +37,8 @@ export class ArticleResponse {
   @ApiProperty({ description: '댓글 수' })
   @Expose()
   comment_num: number;
+
+  @ApiProperty({ description: '내 좋아요 여부' })
+  @Expose()
+  like: boolean;
 }

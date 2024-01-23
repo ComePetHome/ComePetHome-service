@@ -58,7 +58,7 @@ export class ArticleController {
     @Query('category') category: ArticleCategory,
     @Query('pageNumber') pageNum: number = 0,
   ): Promise<ArticleResponse[]> {
-    return this.articleService.getArticles(sort, category, pageNum);
+    return this.articleService.getArticles(sort, category, pageNum, '1231');
   }
 
   @Get('/:articleId')

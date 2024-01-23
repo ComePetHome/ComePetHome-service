@@ -23,6 +23,7 @@ export class ArticleService {
     sort: ArticleSort,
     category: ArticleCategory,
     pageNum: number,
+    user_id: string,
     pageSize: number = 10,
   ): Promise<ArticleResponse[]> {
     const skip = pageNum * pageSize;
@@ -32,7 +33,9 @@ export class ArticleService {
       .createQueryBuilder('article')
       .where('article.category = :category', { category })
       .leftJoinAndSelect('article.comments', 'comment')
-      .leftJoinAndSelect('article.likes', 'like')
+      .leftJoinAndSelect('article.likes', 'like', 'like.user_id = :user_id', {
+        user_id: user_id,
+      })
       .skip(skip)
       .take(pageSize);
 
@@ -53,6 +56,7 @@ export class ArticleService {
         ArticleResponse,
         {
           ...article,
+          like: article.likes.length > 0,
           comment_num: article.comments.length,
         },
         { excludeExtraneousValues: true },
@@ -66,7 +70,6 @@ export class ArticleService {
       .createQueryBuilder('article')
       .where('article.id = :articleId', { articleId })
       .leftJoinAndSelect('article.comments', 'comment')
-      .leftJoinAndSelect('article.likes', 'like')
       .orderBy('comment.created_at', 'DESC')
       .getOne();
 
@@ -78,7 +81,6 @@ export class ArticleService {
       ArticleDetailResponse,
       {
         ...article,
-        like_num: article.likes.length,
       },
       {
         excludeExtraneousValues: true,
