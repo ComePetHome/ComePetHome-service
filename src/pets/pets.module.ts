@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { PetsController } from './pets.controller';
+import { PetsController } from './pets.controller-read';
 import { PetsService } from './pets.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Pet } from './pet.entity';

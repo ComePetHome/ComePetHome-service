@@ -1,34 +1,12 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Headers,
-  Param,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Headers, Param, Post } from '@nestjs/common';
 import { ApiBody, ApiHeader, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CommentService } from './comment.service';
 import { CommentRequest } from './dto/request/comment.request';
-import { CommentResponse } from './dto/response/comment.response';
 
-@Controller('community/comment')
+@Controller('command/community/comment')
 @ApiTags('댓글')
 export class CommentController {
   constructor(private commentService: CommentService) {}
-
-  @Get()
-  @ApiHeader({
-    name: 'userId',
-    description: 'User ID (Optional)',
-    required: false,
-  })
-  @ApiOperation({ summary: '유저가 쓴 댓글 조회' })
-  async getComment(
-    @Headers('userId') userId: string,
-  ): Promise<CommentResponse[]> {
-    return this.commentService.getComments(userId);
-  }
 
   @Post()
   @ApiHeader({
