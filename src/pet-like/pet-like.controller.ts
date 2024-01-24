@@ -1,18 +1,18 @@
-import { Controller, Delete, Param, Post } from '@nestjs/common';
+import { Controller, Delete, Headers, Param, Post } from '@nestjs/common';
 import { PetLikeService } from './pet-like.service';
-import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
 @Controller('pets/like')
 @ApiTags('PetLike')
 export class PetLikeController {
   constructor(private petLikeService: PetLikeService) {}
 
-  @Post('/:userId/:petId')
+  @Post('/:petId')
   @ApiOperation({ summary: '유기동물 좋아요 추가' })
-  @ApiParam({
+  @ApiHeader({
     name: 'userId',
-    type: String,
-    description: '사용자 id',
+    description: 'User ID (Optional)',
+    required: false,
   })
   @ApiParam({
     name: 'petId',
@@ -20,23 +20,23 @@ export class PetLikeController {
     description: '동물 번호(pet_id)',
   })
   async addLike(
-    @Param('userId') userId: string,
+    @Headers('userId') userId: string,
     @Param('petId') petId: number,
   ) {
     return this.petLikeService.addLike(userId, petId);
   }
 
-  @Delete('/:userId/:petId')
+  @Delete('/:petId')
   @ApiOperation({ summary: '유기동물 좋아요 추가' })
   @ApiParam({
     name: 'userId',
     type: String,
     description: '사용자 id',
   })
-  @ApiParam({
-    name: 'petId',
-    type: Number,
-    description: '동물 번호(pet_id)',
+  @ApiHeader({
+    name: 'userId',
+    description: 'User ID (Optional)',
+    required: false,
   })
   @ApiOperation({ summary: '유기동물 좋아요 제거' })
   @ApiParam({
@@ -50,7 +50,7 @@ export class PetLikeController {
     description: '동물 번호(pet_id)',
   })
   async deleteLike(
-    @Param('userId') userId: string,
+    @Headers('userId') userId: string,
     @Param('petId') petId: number,
   ) {
     this.petLikeService.removeLike(userId, petId);
