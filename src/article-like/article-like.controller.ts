@@ -1,5 +1,5 @@
-import { Controller, Delete, Param, Post } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Controller, Delete, Headers, Param, Post } from '@nestjs/common';
+import { ApiHeader, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ArticleLikeService } from './article-like.service';
 
 @Controller('community/like')
@@ -7,19 +7,29 @@ import { ArticleLikeService } from './article-like.service';
 export class ArticleLikeController {
   constructor(private articleLikeService: ArticleLikeService) {}
 
-  @Post('/:userId/:articleId')
+  @Post('/:articleId')
+  @ApiHeader({
+    name: 'userId',
+    description: 'User ID (Optional)',
+    required: false,
+  })
   @ApiOperation({ summary: '게시물 좋아요 추가' })
   async addLike(
-    @Param('userId') userId: string,
+    @Headers('userId') userId: string,
     @Param('articleId') articleId: number,
   ) {
     return this.articleLikeService.addLike(userId, articleId);
   }
 
-  @Delete('/:userId/:articleId')
+  @Delete('/:articleId')
+  @ApiHeader({
+    name: 'userId',
+    description: 'User ID (Optional)',
+    required: false,
+  })
   @ApiOperation({ summary: '게시물 좋아요 삭제' })
   async deleteLike(
-    @Param('userId') userId: string,
+    @Headers('userId') userId: string,
     @Param('articleId') articleId: number,
   ) {
     return this.articleLikeService.removeLike(userId, articleId);

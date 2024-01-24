@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   Param,
   Post,
   Query,
@@ -12,6 +13,7 @@ import {
 import {
   ApiBody,
   ApiConsumes,
+  ApiHeader,
   ApiOperation,
   ApiParam,
   ApiQuery,
@@ -51,14 +53,20 @@ export class ArticleController {
     enum: Object.values(ArticleSort),
     description: '정렬',
   })
+  @ApiHeader({
+    name: 'userId',
+    description: 'User ID (Optional)',
+    required: false,
+  })
   @ApiOperation({ summary: '커뮤니티 리스트 조회' })
   @Get()
   async getArticles(
     @Query('sort') sort: ArticleSort,
     @Query('category') category: ArticleCategory,
     @Query('pageNumber') pageNum: number = 0,
+    @Headers('userId') userId: string,
   ): Promise<ArticleResponse[]> {
-    return this.articleService.getArticles(sort, category, pageNum, '1231');
+    return this.articleService.getArticles(sort, category, pageNum, userId);
   }
 
   @Get('/info/:articleId')
@@ -68,10 +76,16 @@ export class ArticleController {
     type: Number,
     description: '게시물 id',
   })
+  @ApiHeader({
+    name: 'userId',
+    description: 'User ID (Optional)',
+    required: false,
+  })
   async getArticle(
+    @Headers('userId') userId: string,
     @Param('articleId') articleId: number,
   ): Promise<ArticleDetailResponse> {
-    return this.articleService.getArticleDetail(articleId, '1231');
+    return this.articleService.getArticleDetail(articleId, userId);
   }
 
   @ApiQuery({
@@ -80,23 +94,29 @@ export class ArticleController {
     type: Number,
     description: '페이지 번호 (기본값: 0)',
   })
+  @ApiHeader({
+    name: 'userId',
+    description: 'User ID (Optional)',
+    required: false,
+  })
   @ApiOperation({ summary: '커뮤니티 리스트 검색' })
   @Get('/search')
   async getSearchedArticles(
     @Query('searchKeyword') word: string = '',
     @Query('pageNumber') pageNum: number = 0,
+    @Headers('userId') userId: string,
   ): Promise<ArticleResponse[]> {
-    return this.articleService.getSearchedArticles(pageNum, '1231', word);
+    return this.articleService.getSearchedArticles(pageNum, userId, word);
   }
 
-  @Post('/:userId')
+  @Post()
   @ApiOperation({ summary: '게시글 작성' })
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FilesInterceptor('files', 3))
-  @ApiParam({
+  @ApiHeader({
     name: 'userId',
-    type: String,
-    description: '사용자 id',
+    description: 'User ID (Optional)',
+    required: false,
   })
   @ApiBody({
     //Todo: 인기순 정렬 추가 필요
@@ -118,7 +138,7 @@ export class ArticleController {
   })
   @ApiResponse({ status: 201, description: '게시물 작성 성공' })
   async createArticle(
-    @Param('userId') userId: string,
+    @Headers('userId') userId: string,
     @Body() createArticleRequest: CreateArticleRequest,
     @UploadedFiles() files: Express.Multer.File[],
   ) {
@@ -129,12 +149,12 @@ export class ArticleController {
     );
   }
 
-  @Delete('/:userId/:articleId')
+  @Delete('/:articleId')
   @ApiOperation({ summary: '게시글 삭제' })
-  @ApiParam({
+  @ApiHeader({
     name: 'userId',
-    type: String,
-    description: '사용자 id',
+    description: 'User ID (Optional)',
+    required: false,
   })
   @ApiParam({
     name: 'articleId',
@@ -142,7 +162,7 @@ export class ArticleController {
     description: '게시물 id',
   })
   async deleteArticle(
-    @Param('userId') userId: string,
+    @Headers('userId') userId: string,
     @Param('articleId') articleId: number,
   ) {
     return this.articleService.deleteArticle(userId, articleId);

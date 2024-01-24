@@ -1,6 +1,7 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Headers, Param, Query } from '@nestjs/common';
 import { PetsAPIService } from './petsAPIUpdate.service';
 import {
+  ApiHeader,
   ApiOperation,
   ApiParam,
   ApiQuery,
@@ -33,11 +34,14 @@ export class PetsController {
     type: PetListItemResponse,
     isArray: true,
   })
+  @ApiHeader({
+    name: 'userId',
+    description: 'User ID (Optional)',
+    required: false,
+  })
   getPetData(
-    @Query('pageNumber')
-    pageNumber: number = 0,
-    @Query('userId')
-    userId: string = null,
+    @Query('pageNumber') pageNumber: number = 0,
+    @Headers('userId') userId: string = null,
   ): Promise<PetListItemResponse[]> {
     //Todo : 데이터 업데이트 스케줄러로 빼기
     this.petsAPIService.updatePetData();
