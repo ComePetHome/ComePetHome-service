@@ -12,7 +12,7 @@ import { PetListItemResponse } from './dto/response/petListItem.response';
 import { PetsService } from './pets.service';
 import { PetInfoResponse } from './dto/response/petInfo.response';
 
-@Controller('pets')
+@Controller('pet/pets')
 @ApiTags('Pet')
 export class PetsController {
   constructor(

@@ -8,7 +8,6 @@ import { ArticleModule } from './article/article.module';
 import { ImageuploadModule } from './imageupload/imageupload.module';
 import { CommentModule } from './comment/comment.module';
 import { ArticleLikeModule } from './article-like/article-like.module';
-import { RouterModule } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -20,24 +19,6 @@ import { RouterModule } from '@nestjs/core';
     ImageuploadModule,
     CommentModule,
     ArticleLikeModule,
-    RouterModule.register([
-      {
-        path: 'pet',
-        module: PetsModule,
-      },
-      {
-        path: 'pet',
-        module: PetLikeModule,
-      },
-      {
-        path: 'pet',
-        module: ArticleModule,
-      },
-      {
-        path: 'pet',
-        module: ArticleLikeModule,
-      },
-    ]),
   ],
 })
 export class AppModule {}

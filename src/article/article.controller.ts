@@ -28,7 +28,7 @@ import { ArticleResponse } from './dto/response/article.response';
 import { CreateArticleRequest } from './dto/request/createArticle.request';
 import { ArticleDetailResponse } from './dto/response/articleDetail.response';
 
-@Controller('community')
+@Controller('pet/community')
 @ApiTags('커뮤니티')
 export class ArticleController {
   constructor(private articleService: ArticleService) {}

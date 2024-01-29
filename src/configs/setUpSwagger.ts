@@ -9,5 +9,5 @@ export function setupSwagger(app: INestApplication): void {
 
   const document = SwaggerModule.createDocument(app, options);
   // ~/api-docs로 경로 지정
-  SwaggerModule.setup('read/api-docs', app, document);
+  SwaggerModule.setup('pet/api-docs', app, document);
 }
