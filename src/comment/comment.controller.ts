@@ -12,7 +12,7 @@ import { CommentService } from './comment.service';
 import { CommentRequest } from './dto/request/comment.request';
 import { CommentResponse } from './dto/response/comment.response';
 
-@Controller('pet/community/comment')
+@Controller('community/comment')
 @ApiTags('댓글')
 export class CommentController {
   constructor(private commentService: CommentService) {}

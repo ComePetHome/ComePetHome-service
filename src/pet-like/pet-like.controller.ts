@@ -2,7 +2,7 @@ import { Controller, Delete, Headers, Param, Post } from '@nestjs/common';
 import { PetLikeService } from './pet-like.service';
 import { ApiHeader, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
-@Controller('pet/pets/like')
+@Controller('pets/like')
 @ApiTags('PetLike')
 export class PetLikeController {
   constructor(private petLikeService: PetLikeService) {}
