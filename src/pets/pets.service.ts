@@ -35,6 +35,10 @@ export class PetsService {
         {
           ...pet,
           like: pet.likes.length > 0,
+          thumbnail:
+            pet.thumbnail_url && pet.thumbnail_url.length > 0
+              ? pet.thumbnail_url[0]
+              : null,
         },
         {
           excludeExtraneousValues: true,

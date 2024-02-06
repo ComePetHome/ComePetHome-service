@@ -57,4 +57,7 @@ export class PetListItemResponse {
 
   @Expose()
   like: boolean;
+
+  @Expose()
+  thumbnail: string | null;
 }

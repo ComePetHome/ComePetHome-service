@@ -28,22 +28,12 @@ export class PetLikeController {
 
   @Delete('/:petId')
   @ApiOperation({ summary: '유기동물 좋아요 추가' })
-  @ApiParam({
-    name: 'userId',
-    type: String,
-    description: '사용자 id',
-  })
   @ApiHeader({
     name: 'userId',
     description: 'User ID (Optional)',
     required: false,
   })
   @ApiOperation({ summary: '유기동물 좋아요 제거' })
-  @ApiParam({
-    name: 'userId',
-    type: String,
-    description: '사용자 id',
-  })
   @ApiParam({
     name: 'petId',
     type: Number,

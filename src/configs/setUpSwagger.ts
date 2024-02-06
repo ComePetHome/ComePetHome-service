@@ -5,6 +5,10 @@ export function setupSwagger(app: INestApplication): void {
   const options = new DocumentBuilder()
     .setTitle('Come Pet Home API Docs')
     .setDescription('Come Pet Home service API Docs')
+    .addBearerAuth(
+      { type: 'http', scheme: 'Bearer', bearerFormat: 'Token' },
+      'access-token',
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, options);

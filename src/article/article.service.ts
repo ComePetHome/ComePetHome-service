@@ -11,6 +11,7 @@ import { plainToClass } from 'class-transformer';
 import { ArticleDetailResponse } from './dto/response/articleDetail.response';
 import { ArticleNotFoundException } from './exception/ArticleNotFound.exception';
 import { InvalidSortValueException } from './exception/InvalidSortValue.exception';
+import { getUserImageAPI } from '@/apis/profileImageAPIS';
 
 @Injectable()
 export class ArticleService {
@@ -85,6 +86,41 @@ export class ArticleService {
           searchKeyword: `%${searchKeyword}%`,
         },
       )
+      .skip(skip)
+      .take(pageSize)
+      .orderBy('article.created_at', 'DESC')
+      .getMany();
+
+    return articles.map((article) =>
+      plainToClass(
+        ArticleResponse,
+        {
+          user_image: getUserImageAPI(article.user_id),
+          ...article,
+          like: article.likes.length > 0,
+          comment_num: article.comments.length,
+        },
+        { excludeExtraneousValues: true },
+      ),
+    );
+  }
+
+  async getArticlesByUserId(
+    pageNum: number,
+    user_id: string,
+  ): Promise<ArticleResponse[]> {
+    const pageSize = 10;
+    const skip = pageNum * pageSize;
+
+    const articles: Article[] = await this.articleRepository
+      .createQueryBuilder('article')
+      .leftJoinAndSelect('article.comments', 'comment')
+      .leftJoinAndSelect('article.likes', 'like', 'like.user_id = :user_id', {
+        user_id: user_id,
+      })
+      .where('article.user_id = :user_id', {
+        user_id: user_id,
+      })
       .skip(skip)
       .take(pageSize)
       .orderBy('article.created_at', 'DESC')

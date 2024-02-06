@@ -109,6 +109,26 @@ export class ArticleController {
     return this.articleService.getSearchedArticles(pageNum, userId, word);
   }
 
+  @ApiQuery({
+    name: 'pageNumber',
+    required: false,
+    type: Number,
+    description: '페이지 번호 (기본값: 0)',
+  })
+  @ApiHeader({
+    name: 'userId',
+    description: 'User ID (Optional)',
+    required: false,
+  })
+  @ApiOperation({ summary: '커뮤니티 리스트 검색' })
+  @Get('/user')
+  async getUserArticle(
+    @Query('pageNumber') pageNum: number = 0,
+    @Headers('userId') userId: string,
+  ): Promise<ArticleResponse[]> {
+    return this.articleService.getArticlesByUserId(pageNum, userId);
+  }
+
   @Post()
   @ApiOperation({ summary: '게시글 작성' })
   @ApiConsumes('multipart/form-data')

@@ -11,6 +11,7 @@ export const getPetsImageAPI = async (offset: number, pageTerm: number) => {
     );
     const result = response.data.TbAdpWaitAnimalPhotoView.RESULT;
     if (result.CODE === 'INFO-000') {
+      // console.log(response.data.TbAdpWaitAnimalPhotoView as PetImageResponse);
       return response.data.TbAdpWaitAnimalPhotoView as PetImageResponse;
     } else {
       // 데이터 없거나 오류

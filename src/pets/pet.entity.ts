@@ -46,8 +46,8 @@ export class Pet extends BasicEntity {
   @Column({ nullable: true })
   temporary_protection_contents: string;
 
-  @Column({ nullable: true })
-  thumbnail_url: string;
+  @Column('character varying', { array: true, nullable: true })
+  thumbnail_url: string[];
 
   @OneToMany(() => PetLike, (like) => like.pet)
   likes: PetLike[];

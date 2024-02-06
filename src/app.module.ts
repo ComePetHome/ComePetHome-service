@@ -37,6 +37,10 @@ import { RouterModule } from '@nestjs/core';
         path: 'pet',
         module: ArticleLikeModule,
       },
+      {
+        path: 'pet',
+        module: CommentModule,
+      },
     ]),
   ],
 })

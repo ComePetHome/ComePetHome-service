@@ -71,14 +71,20 @@ export class PetsAPIService {
 
         if (petData !== null) {
           petData.map(async (petInfo) => {
-            //ANIMAL_NO 찾아서 "PHOTO_KND":"THUMB" 만 저장
-            if (petInfo.PHOTO_KND === 'THUMB') {
-              const pet = await this.findByPetId(petInfo.ANIMAL_NO);
-              if (pet !== null && pet.thumbnail_url === null) {
-                pet.thumbnail_url = petInfo.PHOTO_URL;
-                await this.petRepository.save(pet);
-              }
+            const pet = await this.findByPetId(petInfo.ANIMAL_NO);
+            if (pet.thumbnail_url === null) {
+              pet.thumbnail_url = [];
             }
+            if (pet.thumbnail_url.length < 5) {
+              pet.thumbnail_url.push(petInfo.PHOTO_URL);
+              await this.petRepository.save(pet);
+            }
+            // if (petInfo.PHOTO_KND === 'THUMB') {
+            //   if (pet !== null && pet.thumbnail_url === null) {
+            //     pet.thumbnail_url = petInfo.PHOTO_URL;
+            //     await this.petRepository.save(pet);
+            //   }
+            // }
           });
           offset += pageTerm;
         } else {

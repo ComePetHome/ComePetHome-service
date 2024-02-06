@@ -41,4 +41,7 @@ export class ArticleResponse {
   @ApiProperty({ description: '내 좋아요 여부' })
   @Expose()
   like: boolean;
+
+  @Expose()
+  user_image: string;
 }

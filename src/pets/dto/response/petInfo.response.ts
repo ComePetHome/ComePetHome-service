@@ -37,9 +37,9 @@ export class PetInfoResponse extends PetListItemResponse {
 
   @Expose()
   @ApiProperty({
-    description: '소개 영상 url, 유튜브 링크',
+    description: '이미지',
   })
-  thumbnail_url?: string | null;
+  thumbnail_url?: string[] | null;
 
   @Expose()
   created_at: Date;
