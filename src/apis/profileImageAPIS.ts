@@ -11,7 +11,7 @@ export const getUserImageAPI = async (userId: string) => {
       headers,
     });
     console.log(response);
-    return response[0];
+    return response.data[0];
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log(error.response?.data);
