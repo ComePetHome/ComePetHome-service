@@ -4,13 +4,13 @@ import { userAxiosInstance } from './axiosInstance';
 export const getUserImageAPI = async (userId: string) => {
   try {
     const headers = {
-      userId: `${userId}`,
+      userId: userId,
       'Content-Type': 'application/json',
     };
     const response = await userAxiosInstance.get(`/image/my-profile`, {
       headers,
     });
-    console.log(response);
+    console.log(response.data[0]);
     return response.data[0];
   } catch (error) {
     if (axios.isAxiosError(error)) {

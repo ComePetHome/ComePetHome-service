@@ -91,17 +91,20 @@ export class ArticleService {
       .orderBy('article.created_at', 'DESC')
       .getMany();
 
-    return articles.map((article) =>
-      plainToClass(
-        ArticleResponse,
-        {
-          user_image: getUserImageAPI(article.user_id),
-          ...article,
-          like: article.likes.length > 0,
-          comment_num: article.comments.length,
-        },
-        { excludeExtraneousValues: true },
-      ),
+    return Promise.all(
+      articles.map(async (article) => {
+        const user_image = await getUserImageAPI(article.user_id);
+        return plainToClass(
+          ArticleResponse,
+          {
+            user_image: user_image,
+            ...article,
+            like: article.likes.length > 0,
+            comment_num: article.comments.length,
+          },
+          { excludeExtraneousValues: true },
+        );
+      }),
     );
   }
 
