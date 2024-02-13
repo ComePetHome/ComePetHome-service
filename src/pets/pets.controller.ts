@@ -1,6 +1,7 @@
 import { Controller, Get, Headers, Param, Query } from '@nestjs/common';
 import { PetsAPIService } from './petsAPIUpdate.service';
 import {
+  ApiBearerAuth,
   ApiHeader,
   ApiOperation,
   ApiParam,
@@ -12,6 +13,7 @@ import { PetListItemResponse } from './dto/response/petListItem.response';
 import { PetsService } from './pets.service';
 import { PetInfoResponse } from './dto/response/petInfo.response';
 
+@ApiBearerAuth('access-token')
 @Controller('pets')
 @ApiTags('Pet')
 export class PetsController {

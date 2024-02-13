@@ -10,7 +10,6 @@ export const getUserImageAPI = async (userId: string) => {
     const response = await userAxiosInstance.get(`/image/my-profile`, {
       headers,
     });
-    console.log(response.data[0]);
     return response.data[0];
   } catch (error) {
     if (axios.isAxiosError(error)) {

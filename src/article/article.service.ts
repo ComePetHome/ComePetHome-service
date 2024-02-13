@@ -12,10 +12,12 @@ import { ArticleDetailResponse } from './dto/response/articleDetail.response';
 import { ArticleNotFoundException } from './exception/ArticleNotFound.exception';
 import { InvalidSortValueException } from './exception/InvalidSortValue.exception';
 import { getUserImageAPI } from '@/apis/profileImageAPIS';
+import { Connection } from 'typeorm';
 
 @Injectable()
 export class ArticleService {
   constructor(
+    private readonly connection: Connection,
     private articleRepository: ArticleRepository,
     private imageUploadService: ImageuploadService,
   ) {}
@@ -53,16 +55,25 @@ export class ArticleService {
       throw new InvalidSortValueException();
     }
 
-    return articles.map((article) =>
-      plainToClass(
-        ArticleResponse,
-        {
-          ...article,
-          like: article.likes.length > 0,
-          comment_num: article.comments.length,
-        },
-        { excludeExtraneousValues: true },
-      ),
+    return Promise.all(
+      articles.map(async (article) => {
+        const user_image = await getUserImageAPI(article.user_id);
+        const nickname = await this.connection.query(
+          `SELECT nick_name FROM users WHERE user_id = '${article.user_id}'`,
+        );
+
+        return plainToClass(
+          ArticleResponse,
+          {
+            ...article,
+            like: article.likes.length > 0,
+            comment_num: article.comments.length,
+            user_image: user_image,
+            nickname: nickname[0].nick_name,
+          },
+          { excludeExtraneousValues: true },
+        );
+      }),
     );
   }
   // 게시물 검색
@@ -90,17 +101,20 @@ export class ArticleService {
       .take(pageSize)
       .orderBy('article.created_at', 'DESC')
       .getMany();
-
     return Promise.all(
       articles.map(async (article) => {
         const user_image = await getUserImageAPI(article.user_id);
+        const nickname = await this.connection.query(
+          `SELECT nick_name FROM users WHERE user_id = '${article.user_id}'`,
+        );
         return plainToClass(
           ArticleResponse,
           {
-            user_image: user_image,
             ...article,
             like: article.likes.length > 0,
             comment_num: article.comments.length,
+            user_image: user_image,
+            nickname: nickname[0].nick_name,
           },
           { excludeExtraneousValues: true },
         );
@@ -108,6 +122,7 @@ export class ArticleService {
     );
   }
 
+  // 내가 쓴 글
   async getArticlesByUserId(
     pageNum: number,
     user_id: string,
@@ -161,11 +176,39 @@ export class ArticleService {
       throw new ArticleNotFoundException();
     }
 
+    const enrichedComments = await Promise.all(
+      article.comments.map(async (comment) => {
+        // 각 댓글에 대한 추가 정보 로드
+        const user_image = await getUserImageAPI(comment.user_id);
+        const nicknameResult = await this.connection.query(
+          `SELECT nick_name FROM users WHERE user_id = '${comment.user_id}'`,
+        );
+        const nickname = nicknameResult[0]?.nick_name || '';
+
+        return {
+          ...comment,
+          user_image,
+          nickname,
+        };
+      }),
+    );
+    const enrichedArticle = {
+      ...article,
+      comments: enrichedComments,
+    };
+
+    const user_image = await getUserImageAPI(article.user_id);
+    const nickname = await this.connection.query(
+      `SELECT nick_name FROM users WHERE user_id = '${article.user_id}'`,
+    );
+
     return plainToClass(
       ArticleDetailResponse,
       {
-        ...article,
+        ...enrichedArticle,
         like: article.likes.length > 0,
+        user_image: user_image,
+        nickname: nickname[0].nick_name,
       },
       {
         excludeExtraneousValues: true,

@@ -1,9 +1,16 @@
 import { Controller, Delete, Headers, Param, Post } from '@nestjs/common';
 import { PetLikeService } from './pet-like.service';
-import { ApiHeader, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiHeader,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @Controller('pets/like')
 @ApiTags('PetLike')
+@ApiBearerAuth('access-token')
 export class PetLikeController {
   constructor(private petLikeService: PetLikeService) {}
 

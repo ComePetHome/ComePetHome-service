@@ -44,4 +44,7 @@ export class ArticleResponse {
 
   @Expose()
   user_image: string;
+
+  @Expose()
+  nickname: string;
 }

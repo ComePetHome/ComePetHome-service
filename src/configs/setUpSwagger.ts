@@ -6,7 +6,7 @@ export function setupSwagger(app: INestApplication): void {
     .setTitle('Come Pet Home API Docs')
     .setDescription('Come Pet Home service API Docs')
     .addBearerAuth(
-      { type: 'http', scheme: 'Bearer', bearerFormat: 'Token' },
+      { type: 'http', scheme: 'Bearer', bearerFormat: 'JWT', in: 'header' },
       'access-token',
     )
     .build();

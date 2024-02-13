@@ -7,13 +7,20 @@ import {
   Param,
   Post,
 } from '@nestjs/common';
-import { ApiBody, ApiHeader, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiHeader,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CommentService } from './comment.service';
 import { CommentRequest } from './dto/request/comment.request';
 import { CommentResponse } from './dto/response/comment.response';
 
 @Controller('community/comment')
 @ApiTags('댓글')
+@ApiBearerAuth('access-token')
 export class CommentController {
   constructor(private commentService: CommentService) {}
 
@@ -37,7 +44,7 @@ export class CommentController {
     required: false,
   })
   @ApiOperation({ summary: '댓글 추가' })
-  @ApiBody({ type: CommentRequest })
+  @ApiBody({ type: CommentRequest, description: '댓글 추가를 위한 요청 본문' })
   async addComment(
     @Headers('userId') userId: string,
     @Body() commentRequest: CommentRequest,

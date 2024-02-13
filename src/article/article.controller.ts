@@ -11,6 +11,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiConsumes,
   ApiHeader,
@@ -30,6 +31,7 @@ import { ArticleDetailResponse } from './dto/response/articleDetail.response';
 
 @Controller('community')
 @ApiTags('커뮤니티')
+@ApiBearerAuth('access-token')
 export class ArticleController {
   constructor(private articleService: ArticleService) {}
 

@@ -13,4 +13,12 @@ export class CommentResponse {
   @Expose()
   @ApiProperty({ description: '작성일' })
   created_at: Date;
+
+  @Expose()
+  @ApiProperty({ description: '닉네임' })
+  nickname: string;
+
+  @Expose()
+  @ApiProperty({ description: '프로필' })
+  user_image: string;
 }

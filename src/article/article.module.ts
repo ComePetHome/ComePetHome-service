@@ -8,7 +8,11 @@ import { ImageuploadModule } from '@/imageupload/imageupload.module';
 import { ArticleValidService } from './articleValid.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Article]), ImageuploadModule],
+  imports: [
+    TypeOrmModule.forFeature([Article]),
+    ImageuploadModule,
+    // UsersModule,
+  ],
   controllers: [ArticleController],
   providers: [ArticleService, ArticleRepository, ArticleValidService],
   exports: [ArticleRepository, ArticleValidService],
