@@ -8,6 +8,7 @@ export enum ErrorCode {
   INVALID_PET_ID = 1000 + 1,
   LIKE_ALREADY_EXISTS = 1000 + 2,
   LIKE_ALREADY_DELETE = 1000 + 3,
+  INVALID_USER_ID = 1000 + 4,
 
   //Community error
   NOT_ARTICLE_AUTHOR = 2000 + 1,

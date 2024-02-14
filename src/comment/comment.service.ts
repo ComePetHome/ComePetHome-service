@@ -8,6 +8,7 @@ import { CommentNotFoundException } from './exception/CommentNotFound.exception'
 import { NotCommentAuthorException } from './exception/NotCommentAuthor.exception';
 import { CommentResponse } from './dto/response/comment.response';
 import { plainToClass } from 'class-transformer';
+import { InvalidUserException } from '@/pets/exception/InvalidUser.exception';
 
 @Injectable()
 export class CommentService {
@@ -18,6 +19,9 @@ export class CommentService {
 
   //유저가 단 댓글 조회
   async getComments(userId: string): Promise<CommentResponse[]> {
+    if (userId == undefined) {
+      throw new InvalidUserException();
+    }
     const comments: CommentResponse[] = (
       await this.commentRepository.find({
         where: { user_id: userId },
@@ -35,6 +39,9 @@ export class CommentService {
     user_id: string,
     request: CommentRequest,
   ): Promise<Comment> {
+    if (user_id == undefined) {
+      throw new InvalidUserException();
+    }
     const { contents, article_id } = request;
     const article = await this.articleValidService.getArticleById(article_id);
     const comment = await this.commentRepository.create({
@@ -47,6 +54,9 @@ export class CommentService {
   }
   // id 같은 comment 하나 삭제
   async deleteComment(userId: string, comment_id: number): Promise<void> {
+    if (userId == undefined) {
+      throw new InvalidUserException();
+    }
     const comment: Comment = await this.findCommentById(comment_id);
     if (comment.user_id != userId) {
       throw new NotCommentAuthorException();

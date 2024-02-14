@@ -13,6 +13,7 @@ import { ArticleNotFoundException } from './exception/ArticleNotFound.exception'
 import { InvalidSortValueException } from './exception/InvalidSortValue.exception';
 import { getUserImageAPI } from '@/apis/profileImageAPIS';
 import { Connection } from 'typeorm';
+import { InvalidUserException } from '@/pets/exception/InvalidUser.exception';
 
 @Injectable()
 export class ArticleService {
@@ -127,6 +128,9 @@ export class ArticleService {
     pageNum: number,
     user_id: string,
   ): Promise<ArticleResponse[]> {
+    if (user_id == undefined) {
+      throw new InvalidUserException();
+    }
     const pageSize = 10;
     const skip = pageNum * pageSize;
 
@@ -223,6 +227,9 @@ export class ArticleService {
     articleDto: CreateArticleRequest,
     files: Array<Express.Multer.File>,
   ): Promise<Article> {
+    if (userId == undefined) {
+      throw new InvalidUserException();
+    }
     const { title, contents, category } = articleDto;
     const images: string[] = await this.uploadImage(files);
 

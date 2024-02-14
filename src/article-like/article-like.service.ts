@@ -6,6 +6,7 @@ import { LikeAlreadyExistsException } from './exception/LikeAlreadyExists.except
 import { Article } from '@/article/article.entity';
 import { ArticleRepository } from '@/article/article.repository';
 import { LikeAlreadyDeleteException } from './exception/LikeAlreadyDelete.exception';
+import { InvalidUserException } from '@/pets/exception/InvalidUser.exception';
 
 @Injectable()
 export class ArticleLikeService {
@@ -16,6 +17,9 @@ export class ArticleLikeService {
   ) {}
 
   async addLike(user_id: string, article_id: number): Promise<ArticleLike> {
+    if (user_id == undefined) {
+      throw new InvalidUserException();
+    }
     const article: Article =
       await this.articleValidService.getArticleById(article_id);
 
@@ -38,6 +42,9 @@ export class ArticleLikeService {
   }
 
   async removeLike(user_id: string, article_id: number): Promise<void> {
+    if (user_id == undefined) {
+      throw new InvalidUserException();
+    }
     const article: Article =
       await this.articleValidService.getArticleById(article_id);
 
