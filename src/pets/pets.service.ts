@@ -49,6 +49,37 @@ export class PetsService {
     return pets;
   }
 
+  //user가 좋아요 누른 펫 조회
+  async getPetLiked(user_id: string): Promise<PetListItemResponse[]> {
+    const pets: PetListItemResponse[] = (
+      await this.petRepository
+        .createQueryBuilder('pet')
+        .leftJoinAndSelect('pet.likes', 'like', 'like.user_id = :user_id', {
+          user_id: user_id,
+        })
+        .where('like.user_id IS NOT NULL')
+        .orderBy('pet.enlistment_date', 'DESC')
+        .getMany()
+    ).map((pet) =>
+      plainToClass(
+        PetListItemResponse,
+        {
+          ...pet,
+          like: pet.likes.length > 0,
+          thumbnail:
+            pet.thumbnail_url && pet.thumbnail_url.length > 0
+              ? pet.thumbnail_url[0]
+              : null,
+        },
+        {
+          excludeExtraneousValues: true,
+        },
+      ),
+    );
+
+    return pets;
+  }
+
   async getPetInfo(pet_id: number): Promise<PetInfoResponse> {
     const pet: Pet = await this.petValidService.getPetByPetId(pet_id);
     return plainToClass(PetInfoResponse, pet, {

@@ -9,7 +9,7 @@ import { ArticleLikeService } from './article-like.service';
 
 @Controller('community/like')
 @ApiTags('커뮤니티 좋아요')
-@ApiBearerAuth('access-token')
+@ApiBearerAuth('JWT')
 export class ArticleLikeController {
   constructor(private articleLikeService: ArticleLikeService) {}
 

@@ -20,7 +20,7 @@ import { CommentResponse } from './dto/response/comment.response';
 
 @Controller('community/comment')
 @ApiTags('댓글')
-@ApiBearerAuth('access-token')
+@ApiBearerAuth('JWT')
 export class CommentController {
   constructor(private commentService: CommentService) {}
 

@@ -32,7 +32,7 @@ export class PetLikeService {
 
   async removeLike(user_id: string, pet_id: number): Promise<void> {
     const petLike = await this.petLikeRepository.findOne({
-      where: { user_id, pet: { id: pet_id } },
+      where: { user_id, pet: { pet_id: pet_id } },
     });
     if (!petLike) {
       //Todo: 없다면 무시 처리 (다른 처리 가능)

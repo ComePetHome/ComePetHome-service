@@ -6,12 +6,48 @@ export function setupSwagger(app: INestApplication): void {
     .setTitle('Come Pet Home API Docs')
     .setDescription('Come Pet Home service API Docs')
     .addBearerAuth(
-      { type: 'http', scheme: 'Bearer', bearerFormat: 'JWT', in: 'header' },
+      {
+        name: 'access-token',
+        type: 'http',
+        scheme: 'Bearer',
+        bearerFormat: 'JWT',
+        in: 'header',
+      },
       'access-token',
     )
     .build();
 
   const document = SwaggerModule.createDocument(app, options);
-  // ~/api-docs로 경로 지정
+
+  // Manually add the 'access-token' header to the parameters
+  // document.paths['/pet/api-docs'] = {
+  //   get: {
+  //     parameters: [
+  //       {
+  //         name: 'access-token',
+  //         in: 'header',
+  //         description: 'Access Token',
+  //         required: true,
+  //         schema: {
+  //           type: 'string',
+  //         },
+  //       },
+  //     ],
+  //     responses: {}, // Empty responses object
+  //   },
+  // };
+
+  // Add the 'access-token' header to the global security options
+  document.components = {
+    securitySchemes: {
+      JWT: {
+        type: 'apiKey',
+        name: 'access-token',
+        in: 'header',
+      },
+    },
+  };
+  document.security = [{ JWT: [] }];
+
   SwaggerModule.setup('pet/api-docs', app, document);
 }

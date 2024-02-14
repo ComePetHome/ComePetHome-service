@@ -31,7 +31,7 @@ import { ArticleDetailResponse } from './dto/response/articleDetail.response';
 
 @Controller('community')
 @ApiTags('커뮤니티')
-@ApiBearerAuth('access-token')
+@ApiBearerAuth('JWT')
 export class ArticleController {
   constructor(private articleService: ArticleService) {}
 

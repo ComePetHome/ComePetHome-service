@@ -10,7 +10,7 @@ import {
 
 @Controller('pets/like')
 @ApiTags('PetLike')
-@ApiBearerAuth('access-token')
+@ApiBearerAuth('JWT')
 export class PetLikeController {
   constructor(private petLikeService: PetLikeService) {}
 

@@ -13,7 +13,7 @@ import { PetListItemResponse } from './dto/response/petListItem.response';
 import { PetsService } from './pets.service';
 import { PetInfoResponse } from './dto/response/petInfo.response';
 
-@ApiBearerAuth('access-token')
+@ApiBearerAuth('JWT')
 @Controller('pets')
 @ApiTags('Pet')
 export class PetsController {
@@ -49,6 +49,25 @@ export class PetsController {
     // this.petsAPIService.updatePetData();
     // this.petsAPIService.updatePetImageData();
     return this.petsService.getAllPetList(userId, pageNumber);
+  }
+
+  @Get('/liked')
+  @ApiOperation({ summary: '좋아요 누른 유기동물 리스트 가져오기' })
+  @ApiResponse({
+    status: 200,
+    description: 'success',
+    type: PetListItemResponse,
+    isArray: true,
+  })
+  @ApiHeader({
+    name: 'userId',
+    description: 'User ID (Optional)',
+    required: false,
+  })
+  getLikedPetData(
+    @Headers('userId') userId: string = null,
+  ): Promise<PetListItemResponse[]> {
+    return this.petsService.getPetLiked(userId);
   }
 
   @Get('/:petId')
